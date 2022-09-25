@@ -9,6 +9,7 @@ import SwiftUI
 import CoreData
 
 struct ViewMemo: View {
+    
     @FetchRequest(entity: Memo.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Memo.dateAdded, ascending: false)], animation: .easeIn) var results: FetchedResults<Memo>
 
     var body: some View {
@@ -18,15 +19,25 @@ struct ViewMemo: View {
                     .font(.system(size: 12))
                     .foregroundColor(.white)
 
-                Text("Last Modified")
-                    .font(.system(size: 8))
-                    .fontWeight(.semibold)
-                    .foregroundColor(.gray)
+                HStack {
+                    Text("Last Modified")
+                        .font(.system(size: 8))
+                        .fontWeight(.semibold)
+                        .foregroundColor(.gray)
 
-                Text(item.dateAdded ?? Date(), style: .date)
-
+                    Text(item.dateAdded ?? Date(), style: .date)
+                        .font(.system(size: 8))
+                        .fontWeight(.semibold)
+                        .foregroundColor(.gray)
+                }
             })
         }
+        .listStyle(CarouselListStyle())
+        .padding(.top)
+        .overlay(
+            Text(results.isEmpty ? "No Memo's found" : "")
+        )
+        .navigationTitle("Memo's")
 
     }
 }

@@ -14,8 +14,8 @@ struct Watch_SaveTask_Watch_AppApp: App {
         WindowGroup {
             NavigationView {
                 ContentView()
-                    .environment(\.managedObjectContext, container.viewContext)
             }
+            .environment(\.managedObjectContext, container.viewContext)
         }
     }
 }

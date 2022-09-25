@@ -15,6 +15,7 @@ struct PersistenceController {
         let viewContext = result.container.viewContext
         for _ in 0..<10 {
             let newItem = Memo(context: viewContext)
+            newItem.title = "Title"
             newItem.dateAdded = Date()
         }
         do {

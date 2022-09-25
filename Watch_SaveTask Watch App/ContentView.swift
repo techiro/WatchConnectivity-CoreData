@@ -28,11 +28,11 @@ struct ContentView: View {
 
                     HStack(spacing: 25) {
                         NavigationLink(destination: ViewMemo()) {
-                            NavButton(image: "doc.plaintext", title: "Memo", rect: rect, color: Color("pink"))
+                            NavButton(image: "doc.plaintext", title: "Memo", rect: rect, color: Color("blue"))
                         }
                         .buttonStyle(PlainButtonStyle())
                         
-                        NavButton(image: "trash", title: "delete", rect: rect, color: Color("red"))
+                        NavButton(image: "star", title: "Rating", rect: rect, color: Color("orange"))
                     }
                     .frame(width: rect.width, alignment: .center)
                 }
