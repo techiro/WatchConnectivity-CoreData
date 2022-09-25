@@ -14,23 +14,35 @@ struct ViewMemo: View {
 
     var body: some View {
         List(results) { item in
-            VStack(alignment: .leading, spacing: 3, content: {
-                Text(item.title ?? "")
-                    .font(.system(size: 12))
-                    .foregroundColor(.white)
+            HStack(spacing: 10) {
+                VStack(alignment: .leading, spacing: 3, content: {
+                    Text(item.title ?? "")
+                        .font(.system(size: 12))
+                        .foregroundColor(.white)
 
-                HStack {
-                    Text("Last Modified")
-                        .font(.system(size: 8))
-                        .fontWeight(.semibold)
-                        .foregroundColor(.gray)
+                    HStack {
+                        Text("Last Modified")
+                            .font(.system(size: 8))
+                            .fontWeight(.semibold)
+                            .foregroundColor(.gray)
 
-                    Text(item.dateAdded ?? Date(), style: .date)
-                        .font(.system(size: 8))
-                        .fontWeight(.semibold)
-                        .foregroundColor(.gray)
+                        Text(item.dateAdded ?? Date(), style: .date)
+                            .font(.system(size: 8))
+                            .fontWeight(.semibold)
+                            .foregroundColor(.gray)
+                    }
+                })
+
+                NavigationLink(destination: AddItem(memoItem: item)) {
+                    Image(systemName: "square.and.pencil")
+                        .font(.callout)
+                        .foregroundColor(.white)
+                        .padding(8)
+                        .background(Color("orange"))
+                        .cornerRadius(8)
                 }
-            })
+                .buttonStyle(PlainButtonStyle())
+            }
         }
         .listStyle(CarouselListStyle())
         .padding(.top)

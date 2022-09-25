@@ -11,6 +11,7 @@ struct AddItem: View {
     @State var memoText = ""
     @Environment(\.managedObjectContext) var context
     @Environment(\.presentationMode) var presentation
+    var memoItem: Memo? // memoがあるかないか
     var body: some View {
         VStack(spacing: 15) {
              TextField("Memories...", text: $memoText)
@@ -26,10 +27,17 @@ struct AddItem: View {
             .buttonStyle(PlainButtonStyle())
             .disabled(memoText == "")
         }
+        .navigationTitle("\(memoItem == nil ? "Add Memo" : "Edit Memo")")
+        .onAppear {
+            // Verifying it memo Item has data...
+            if let memo = memoItem {
+                memoText = memo.title ?? ""
+            }
+        }
     }
 
     func addMemo() {
-        let memo = Memo(context: context)
+        let memo = memoItem == nil ? Memo(context: context) : memoItem!
         memo.title = memoText
         memo.dateAdded = Date()
 
