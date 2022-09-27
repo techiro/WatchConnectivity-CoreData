@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    
     var body: some View {
             GeometryReader { reader in
                 let rect = reader.frame(in: .global)
@@ -22,7 +23,11 @@ struct ContentView: View {
                             })
                         .buttonStyle(PlainButtonStyle())
 
-                        NavButton(image: "trash", title: "delete", rect: rect, color: Color("red"))
+                        NavigationLink(destination: DeleteMemo()) {
+                            NavButton(image: "trash", title: "delete", rect: rect, color: Color("red"))
+                        }
+                        .buttonStyle(PlainButtonStyle())
+
                     }
                     .frame(width: rect.width, alignment: .center)
 
@@ -31,8 +36,12 @@ struct ContentView: View {
                             NavButton(image: "doc.plaintext", title: "Memo", rect: rect, color: Color("blue"))
                         }
                         .buttonStyle(PlainButtonStyle())
-                        
-                        NavButton(image: "star", title: "Rating", rect: rect, color: Color("orange"))
+
+
+                        NavigationLink(destination:SendToPhone()) {
+                            NavButton(image: "square.and.arrow.up", title: "Send to iPhone", rect: rect, color: Color("orange"))
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
                     .frame(width: rect.width, alignment: .center)
                 }
@@ -42,26 +51,6 @@ struct ContentView: View {
 }
 
 
-struct NavButton: View {
-    var image: String
-    var title: String
-    var rect: CGRect
-    var color: Color
-
-    var body: some View {
-        VStack(spacing: 8) {
-            Image(systemName: image)
-                .font(.title2)
-                .frame(width: rect.width / 3, height: rect.width / 3, alignment: .center)
-                .background(color)
-                .clipShape(Circle())
-            Text(title)
-                .font(.system(size: 10))
-                .foregroundColor(.white)
-        }
-
-    }
-}
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()

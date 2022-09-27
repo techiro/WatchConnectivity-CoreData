@@ -8,14 +8,60 @@
 import SwiftUI
 
 struct ContentView: View {
+
+    @ObservedObject var viewModel = MessageListViewModel()
+    @State private var isReachable = "NO"
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        NavigationView {
+            VStack {
+                HStack {
+                    Button(action: {
+                        self.isReachable = self.viewModel.session.isReachable ? "YES": "NO"
+                    }) {
+                        Text("Check")
+                    }
+                    .padding(.leading, 16.0)
+                    Spacer()
+                    Text("isReachable")
+                        .font(.headline)
+                        .padding()
+                    Text(self.isReachable)
+                        .foregroundColor(.gray)
+                        .font(.subheadline)
+                        .padding()
+                }
+                .background(Color.init(.systemGray5))
+                // 受信したメッセージを表示する
+                List {
+                    ForEach(self.viewModel.messagesData, id: \.self) { memo in
+                        MessageRow(memo: memo)
+                    }
+                }
+                .listStyle(PlainListStyle())
+                Spacer()
+            }
+            .navigationTitle("Receiver")
         }
-        .padding()
+    }
+}
+
+struct MessageRow: View {
+    let memo: Memo
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            HStack {
+                Text(memo.title ?? "")
+                    .font(.body)
+                    .padding(.vertical, 4.0)
+
+            }
+            // 受信時のタイムスタンプ
+            Text(Date().formatted())
+                .font(.footnote)
+                .foregroundColor(.gray)
+        }
     }
 }
 

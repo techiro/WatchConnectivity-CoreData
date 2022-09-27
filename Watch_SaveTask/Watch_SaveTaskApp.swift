@@ -9,9 +9,14 @@ import SwiftUI
 
 @main
 struct Watch_SaveTaskApp: App {
+    let container = PersistenceController.shared.container
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationView {
+                ContentView()
+            }
+            .environment(\.managedObjectContext, container.viewContext)
         }
     }
 }
