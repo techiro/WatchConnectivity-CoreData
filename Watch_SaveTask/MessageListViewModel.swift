@@ -37,11 +37,10 @@ extension MessageListViewModel: WCSessionDelegate {
     func session(_ session: WCSession, didReceiveMessageData messageData: Data) {
         DispatchQueue.main.async {
             let decoder = JSONDecoder()
-            decoder.userInfo[CodingUserInfoKey(rawValue: "managedObjectContext")!] = self.moc
+            decoder.userInfo[CodingUserInfoKey.managedObjectContext] = self.moc
             guard let messages = try? decoder.decode([Memo].self, from: messageData) else {
                 return
             }
-
             self.messagesData = messages
         }
     }

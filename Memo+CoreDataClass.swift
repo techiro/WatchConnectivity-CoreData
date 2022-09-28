@@ -17,7 +17,7 @@ public class Memo: NSManagedObject, Decodable, Encodable {
 
     required public convenience init(from decoder: Decoder) throws {
 
-        guard let context = decoder.userInfo[CodingUserInfoKey(rawValue: "managedObjectContext")!] as? NSManagedObjectContext else { fatalError() }
+        guard let context = decoder.userInfo[CodingUserInfoKey.managedObjectContext] as? NSManagedObjectContext else { fatalError() }
 
         self.init(context: context)
 
