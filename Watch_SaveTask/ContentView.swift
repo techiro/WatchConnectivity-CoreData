@@ -48,17 +48,17 @@ struct ContentView: View {
 }
 
 struct MessageRow: View {
-    let memo: String
+    let memo: Memo
 
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                Text(memo ?? "")
+                Text(memo.title!)
                     .font(.body)
                     .padding(.vertical, 4.0)
             }
             // 受信時のタイムスタンプ
-            Text(Date().formatted())
+            Text((memo.dateAdded?.formatted())!)
                 .font(.footnote)
                 .foregroundColor(.gray)
         }

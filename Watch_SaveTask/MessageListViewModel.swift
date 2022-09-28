@@ -10,7 +10,7 @@ import WatchConnectivity
 
 final class MessageListViewModel: NSObject, ObservableObject {
 
-    @Published var messagesData: [String] = []
+    @Published var messagesData: [Memo] = []
     @Environment(\.managedObjectContext) var moc
     var session: WCSession
 
@@ -33,30 +33,6 @@ extension MessageListViewModel: WCSessionDelegate {
     func isSupported() -> Bool {
         return WCSession.isSupported()
     }
-//
-//    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-//        // メインスレッドで処理
-//        print(message)
-//        let jsonDecoder = JSONDecoder()
-//        //decodeする
-//        do {
-//            let data = message
-//        }
-
-//        DispatchQueue.main.async {
-//            let title = message["title"] as? String ?? "UMA"
-//            let dateAdded = message["dateAdded"] as? Date ?? Date()
-//            let data = Memo()
-//            data.title = title
-//            data.dateAdded = dateAdded
-//
-//            JSONEncoder().encode(data)
-//
-//            let decoder = JSONDecoder()
-//            decoder.userInfo[CodingUserInfoKey(rawValue: "managedObjectContext")!] = self.managedObjectContext
-//            let memo = try decoder.decode([Memo].self, from: data)
-//        }
-//    }
 
     func session(_ session: WCSession, didReceiveMessageData messageData: Data) {
         DispatchQueue.main.async {
@@ -65,12 +41,8 @@ extension MessageListViewModel: WCSessionDelegate {
             guard let messages = try? decoder.decode([Memo].self, from: messageData) else {
                 return
             }
-            
-            for message in messages {
-                print(message.title)
-                self.messagesData.append(message.title!)
-            }
 
+            self.messagesData = messages
         }
     }
 
