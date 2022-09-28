@@ -8,15 +8,31 @@
 import WatchConnectivity
 
 final class SendMemoModel: NSObject {
-//    static let shared = SendMemoModel()
+    //    static let shared = SendMemoModel()
     var session: WCSession
 
     init(session: WCSession = .default) {
-        self.session = session
-        super.init()
-        self.session.delegate = self
-        session.activate()
+            self.session = session
+            super.init()
+            self.session.delegate = self
+            session.activate()
     }
+
+    func sendObjectWith(jsonData: Data) {
+        session.sendMessageData(jsonData) { data in
+            print("sent \(data)")
+        }
+    }
+
+
+    func updateApplicationContext(data: Data) {
+        do {
+           try session.updateApplicationContext(["Memos": data])
+        } catch ( let err ){
+            print("\(err) xoundl not update context")
+        }
+    }
+
 }
 
 extension SendMemoModel: WCSessionDelegate {

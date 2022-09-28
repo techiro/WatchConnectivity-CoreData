@@ -35,6 +35,7 @@ struct ContentView: View {
                 // 受信したメッセージを表示する
                 List {
                     ForEach(self.viewModel.messagesData, id: \.self) { memo in
+
                         MessageRow(memo: memo)
                     }
                 }
@@ -47,15 +48,14 @@ struct ContentView: View {
 }
 
 struct MessageRow: View {
-    let memo: Memo
+    let memo: String
 
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                Text(memo.title ?? "")
+                Text(memo ?? "")
                     .font(.body)
                     .padding(.vertical, 4.0)
-
             }
             // 受信時のタイムスタンプ
             Text(Date().formatted())
