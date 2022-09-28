@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct Watch_SaveTaskApp: App {
-    let container = PersistenceReceiver.shared.container
+    let container = PersistenceController.shared.container
 
     var body: some Scene {
         WindowGroup {

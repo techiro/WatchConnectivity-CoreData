@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct ContentView: View {
     @FetchRequest(entity: Memo.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Memo.dateAdded, ascending: false)], animation: .easeIn) var results: FetchedResults<Memo>
@@ -14,9 +15,9 @@ struct ContentView: View {
 
     @ObservedObject var viewModel = MessageListViewModel()
     @State private var isReachable = "NO"
-    
+    @State var memos: [Memo] = []
     var body: some View {
-        List(viewModel.messagesData) { item in
+        List(memos) { item in
             HStack(spacing: 10) {
                 VStack(alignment: .leading, spacing: 3, content: {
                     Text(item.title ?? "")
@@ -38,14 +39,44 @@ struct ContentView: View {
                 Spacer(minLength: 4)
 
 
+
             }
         }
         .onReceive(viewModel.$messagesData) { messages in
-            messages.forEach {saveData(message: $0)}
+            guard let lastDate = getAllMemos().last?.dateAdded else {
+                messages.forEach { saveData(message: $0) }
+                memos = getAllMemos()
+                return
+            }
+            let predicate = NSPredicate(format: "dateAdded > %@", lastDate as CVarArg)
+            let fetchRequest = Memo.fetchRequest()
+            fetchRequest.predicate = predicate
+            let newMemos = getAllMemos(request: fetchRequest)
+                newMemos.forEach {
+                    saveData(message: $0)
+                }
+            memos = getAllMemos()
         }
         .onAppear {
-            viewModel.messagesData = getAllMemos()
+            print(getAllMemos().count)
+             memos = getAllMemos()
+
+//            deleteMemo()
         }
+    }
+
+    func deleteMemo() {
+        let fetchRequest = getAllMemos()
+
+        for memo in fetchRequest {
+            context.delete(memo)
+            do {
+                try context.save()
+            } catch {
+                print("error save()")
+            }
+        }
+
     }
 
     func saveData(message: Memo) {
@@ -64,10 +95,9 @@ struct ContentView: View {
 
     }
 
-    func getAllMemos() -> [Memo] {
-        let fetchRequest = Memo.fetchRequest()
+    func getAllMemos(request: NSFetchRequest<Memo> = Memo.fetchRequest()) -> [Memo] {
         do {
-            return try PersistenceReceiver.shared.container.viewContext.fetch(fetchRequest)
+            return try PersistenceController.shared.container.viewContext.fetch(request)
         } catch {
             print("Failed to fetch movies \(error)")
             return []
@@ -97,6 +127,6 @@ struct MessageRow: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-            .environment(\.managedObjectContext, PersistenceReceiver.preview.container.viewContext)
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }
