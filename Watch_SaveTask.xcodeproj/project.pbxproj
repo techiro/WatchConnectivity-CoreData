@@ -18,7 +18,6 @@
 		03866B2428E024B500FAC97B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03866B2328E024B500FAC97B /* Preview Assets.xcassets */; };
 		03866B2F28E0296000FAC97B /* AddItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03866B2E28E0296000FAC97B /* AddItem.swift */; };
 		03866B7528E02F1900FAC97B /* Persistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03866B7428E02F1900FAC97B /* Persistant.swift */; };
-		03866B7628E02F2400FAC97B /* Persistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03866B7428E02F1900FAC97B /* Persistant.swift */; };
 		03866B7928E02F7800FAC97B /* Task.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 03866B7728E02F7800FAC97B /* Task.xcdatamodeld */; };
 		03866B7B28E0346500FAC97B /* ViewMemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03866B7A28E0346500FAC97B /* ViewMemo.swift */; };
 		03866B8328E0AB2400FAC97B /* Task.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 03866B7728E02F7800FAC97B /* Task.xcdatamodeld */; };
@@ -29,7 +28,7 @@
 		03866B9028E114BA00FAC97B /* DeleteMemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03866B8428E0B82A00FAC97B /* DeleteMemo.swift */; };
 		03866B9328E114E600FAC97B /* NavButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03866B9228E114E600FAC97B /* NavButton.swift */; };
 		03866B9428E1152F00FAC97B /* NavButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03866B9228E114E600FAC97B /* NavButton.swift */; };
-		03866B9528E1154100FAC97B /* ViewMemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03866B7A28E0346500FAC97B /* ViewMemo.swift */; };
+		03E354A228E451DC0064BA1A /* PersistantReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E354A128E451DC0064BA1A /* PersistantReceiver.swift */; };
 		03F1934228E2B6D30008F428 /* MessageListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F1934128E2B6D30008F428 /* MessageListViewModel.swift */; };
 		03F1934D28E2CE540008F428 /* Memo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F1934B28E2CE540008F428 /* Memo+CoreDataClass.swift */; };
 		03F1934E28E2CE540008F428 /* Memo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F1934B28E2CE540008F428 /* Memo+CoreDataClass.swift */; };
@@ -80,6 +79,7 @@
 		03866B8828E10E5000FAC97B /* SendToPhone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendToPhone.swift; sourceTree = "<group>"; };
 		03866B8A28E10EEB00FAC97B /* SendMemoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMemoModel.swift; sourceTree = "<group>"; };
 		03866B9228E114E600FAC97B /* NavButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavButton.swift; sourceTree = "<group>"; };
+		03E354A128E451DC0064BA1A /* PersistantReceiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PersistantReceiver.swift; path = Watch_SaveTask/PersistantReceiver.swift; sourceTree = SOURCE_ROOT; };
 		03F1934128E2B6D30008F428 /* MessageListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListViewModel.swift; sourceTree = "<group>"; };
 		03F1934B28E2CE540008F428 /* Memo+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Memo+CoreDataClass.swift"; sourceTree = "<group>"; };
 		03F1934C28E2CE540008F428 /* Memo+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Memo+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -127,6 +127,7 @@
 		03866B0928E024B300FAC97B /* Watch_SaveTask */ = {
 			isa = PBXGroup;
 			children = (
+				03E354A128E451DC0064BA1A /* PersistantReceiver.swift */,
 				03866B0A28E024B300FAC97B /* Watch_SaveTaskApp.swift */,
 				03866B0C28E024B300FAC97B /* ContentView.swift */,
 				03F1934128E2B6D30008F428 /* MessageListViewModel.swift */,
@@ -147,6 +148,7 @@
 		03866B1B28E024B400FAC97B /* Watch_SaveTask Watch App */ = {
 			isa = PBXGroup;
 			children = (
+				03866B7A28E0346500FAC97B /* ViewMemo.swift */,
 				03866B1C28E024B400FAC97B /* Watch_SaveTaskApp.swift */,
 				03866B1E28E024B400FAC97B /* ContentView.swift */,
 				03866B2E28E0296000FAC97B /* AddItem.swift */,
@@ -181,7 +183,6 @@
 		03866B7328E02EF700FAC97B /* View */ = {
 			isa = PBXGroup;
 			children = (
-				03866B7A28E0346500FAC97B /* ViewMemo.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -292,12 +293,11 @@
 				03866B0D28E024B300FAC97B /* ContentView.swift in Sources */,
 				03F1934228E2B6D30008F428 /* MessageListViewModel.swift in Sources */,
 				03866B8E28E114B500FAC97B /* AddItem.swift in Sources */,
-				03866B9528E1154100FAC97B /* ViewMemo.swift in Sources */,
 				03F1934D28E2CE540008F428 /* Memo+CoreDataClass.swift in Sources */,
 				03866B9028E114BA00FAC97B /* DeleteMemo.swift in Sources */,
-				03866B7628E02F2400FAC97B /* Persistant.swift in Sources */,
 				03866B0B28E024B300FAC97B /* Watch_SaveTaskApp.swift in Sources */,
 				03F1934F28E2CE540008F428 /* Memo+CoreDataProperties.swift in Sources */,
+				03E354A228E451DC0064BA1A /* PersistantReceiver.swift in Sources */,
 				03866B9428E1152F00FAC97B /* NavButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,41 +8,69 @@
 import SwiftUI
 
 struct ContentView: View {
+    @FetchRequest(entity: Memo.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Memo.dateAdded, ascending: false)], animation: .easeIn) var results: FetchedResults<Memo>
+
+    @Environment(\.managedObjectContext) var context
 
     @ObservedObject var viewModel = MessageListViewModel()
     @State private var isReachable = "NO"
-
+    
     var body: some View {
-        NavigationView {
-            VStack {
-                HStack {
-                    Button(action: {
-                        self.isReachable = self.viewModel.session.isReachable ? "YES": "NO"
-                    }) {
-                        Text("Check")
-                    }
-                    .padding(.leading, 16.0)
-                    Spacer()
-                    Text("isReachable")
-                        .font(.headline)
-                        .padding()
-                    Text(self.isReachable)
-                        .foregroundColor(.gray)
-                        .font(.subheadline)
-                        .padding()
-                }
-                .background(Color.init(.systemGray5))
-                // 受信したメッセージを表示する
-                List {
-                    ForEach(self.viewModel.messagesData, id: \.self) { memo in
+        List(viewModel.messagesData) { item in
+            HStack(spacing: 10) {
+                VStack(alignment: .leading, spacing: 3, content: {
+                    Text(item.title ?? "")
+                        .font(.system(size: 12))
 
-                        MessageRow(memo: memo)
+                    HStack {
+                        Text("Last Modified")
+                            .font(.system(size: 8))
+                            .fontWeight(.semibold)
+                            .foregroundColor(.gray)
+
+                        Text(item.dateAdded ?? Date(), style: .date)
+                            .font(.system(size: 8))
+                            .fontWeight(.semibold)
+                            .foregroundColor(.gray)
                     }
-                }
-                .listStyle(PlainListStyle())
-                Spacer()
+                })
+
+                Spacer(minLength: 4)
+
+
             }
-            .navigationTitle("Receiver")
+        }
+        .onReceive(viewModel.$messagesData) { messages in
+            messages.forEach {saveData(message: $0)}
+        }
+        .onAppear {
+            viewModel.messagesData = getAllMemos()
+        }
+    }
+
+    func saveData(message: Memo) {
+        let newMemo = Memo(context: self.context)
+
+        newMemo.title = message.title
+        newMemo.dateAdded = message.dateAdded
+
+        do {
+            if context.hasChanges {
+                try self.context.save()
+            }
+        } catch (let err) {
+            print("Cannot save newMemo:\(err.localizedDescription)")
+        }
+
+    }
+
+    func getAllMemos() -> [Memo] {
+        let fetchRequest = Memo.fetchRequest()
+        do {
+            return try PersistenceReceiver.shared.container.viewContext.fetch(fetchRequest)
+        } catch {
+            print("Failed to fetch movies \(error)")
+            return []
         }
     }
 }
@@ -56,6 +84,7 @@ struct MessageRow: View {
                 Text(memo.title!)
                     .font(.body)
                     .padding(.vertical, 4.0)
+
             }
             // 受信時のタイムスタンプ
             Text((memo.dateAdded?.formatted())!)
@@ -68,5 +97,6 @@ struct MessageRow: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .environment(\.managedObjectContext, PersistenceReceiver.preview.container.viewContext)
     }
 }

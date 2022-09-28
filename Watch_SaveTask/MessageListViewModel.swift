@@ -7,11 +7,13 @@
 
 import SwiftUI
 import WatchConnectivity
+import CoreData
 
 final class MessageListViewModel: NSObject, ObservableObject {
 
     @Published var messagesData: [Memo] = []
-    @Environment(\.managedObjectContext) var moc
+    @Environment(\.managedObjectContext) var managedObjectContext
+
     var session: WCSession
 
     init(session: WCSession = .default) {
@@ -35,14 +37,33 @@ extension MessageListViewModel: WCSessionDelegate {
     }
 
     func session(_ session: WCSession, didReceiveMessageData messageData: Data) {
-        DispatchQueue.main.async {
-            let decoder = JSONDecoder()
-            decoder.userInfo[CodingUserInfoKey.managedObjectContext] = self.moc
-            guard let messages = try? decoder.decode([Memo].self, from: messageData) else {
-                return
-            }
-            self.messagesData = messages
+
+        let decoder = JSONDecoder()
+        decoder.userInfo[CodingUserInfoKey.managedObjectContext] = self.managedObjectContext
+        guard let messages = try? decoder.decode([Memo].self, from: messageData) else {
+            return
         }
+
+        DispatchQueue.main.async {
+            self.messagesData = messages
+//            messages.forEach { self.saveData(message:$0) }
+        }
+    }
+
+
+    func saveData(message: Memo) {
+        let newMemo = Memo(context: self.managedObjectContext)
+        newMemo.title = message.title
+        newMemo.dateAdded = message.dateAdded
+
+        do {
+            if managedObjectContext.hasChanges {
+                try self.managedObjectContext.save()
+            }
+        } catch (let err) {
+            print("Cannot save newMemo:\(err.localizedDescription)")
+        }
+
     }
 
     func sessionDidBecomeInactive(_ session: WCSession) {

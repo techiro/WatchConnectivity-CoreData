@@ -9,7 +9,6 @@ import SwiftUI
 import CoreData
 
 struct ViewMemo: View {
-    
     @FetchRequest(entity: Memo.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Memo.dateAdded, ascending: false)], animation: .easeIn) var results: FetchedResults<Memo>
 
     var body: some View {
