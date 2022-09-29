@@ -18,9 +18,12 @@ extension Memo {
 
     @NSManaged public var dateAdded: Date?
     @NSManaged public var title: String?
-
+    @NSManaged public var uuid: String?
 }
 
 extension Memo : Identifiable {
-    @NSManaged public var id: UUID?
+}
+
+extension Memo {
+    
 }

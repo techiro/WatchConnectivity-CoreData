@@ -38,9 +38,10 @@ struct AddItem: View {
 
     func addMemo() {
         let memo = memoItem == nil ? Memo(context: context) : memoItem!
+        memo.uuid = UUID().uuidString
+        print(memo.uuid)
         memo.title = memoText
         memo.dateAdded = Date()
-
         do {
             try context.save()
             presentation.wrappedValue.dismiss()
@@ -56,4 +57,3 @@ struct AddItem_Previews: PreviewProvider {
         AddItem()
     }
 }
-

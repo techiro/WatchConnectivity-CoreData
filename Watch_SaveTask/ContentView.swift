@@ -56,7 +56,6 @@ struct ContentView: View {
                     .buttonStyle(PlainButtonStyle())
                 }
             }
-           
         }
         .alert("次の動作を行いますか？", isPresented: $deleteMemo) {
             Button {
@@ -79,24 +78,34 @@ struct ContentView: View {
                 memos = getAllMemos()
                 return
             }
+            // modifierされた場合
+            let containsMemo = messages.filter(containsMemo)
+            for memo in containsMemo {
+                guard let watchMemo = messages.first(where: { $0.id == memo.id }) else { return }
+                memo.title = watchMemo.title
+                memo.dateAdded = watchMemo.dateAdded
+                do {
+                    try context.save()
 
-//            let overrideDate = Date(timeIntervalSinceNow: lastDate.timeIntervalSinceNow)
-//
-//            let predicate = NSPredicate(format: "dateAdded > %@", overrideDate as CVarArg)
-//            let fetchRequest = Memo.fetchRequest()
-//            fetchRequest.predicate = predicate
-//            let newMemos = getAllMemos(request: fetchRequest)
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
 
-            let newMemos = messages.filter { $0.dateAdded! > lastDate }
-            newMemos.forEach {
+            //new memo
+            let notContainsMemo = messages.filter(notContainsMemo)
+            notContainsMemo.forEach {
                 saveData(message: $0)
             }
+            //deleteMemo
+
+            deletedMemo(watchMemos: messages)
+
             memos = getAllMemos()
         }
         .onAppear {
             print(getAllMemos().count)
              memos = getAllMemos()
-
 //            deleteMemo()
         }
     }
@@ -152,7 +161,28 @@ struct ContentView: View {
             return []
         }
     }
+    func containsMemo(memo: Memo) -> Bool {
+        return memos.contains(memo)
+    }
+    func notContainsMemo(memo: Memo) -> Bool {
+        return !memos.contains(memo)
+    }
+
+    func deletedMemo(watchMemos: [Memo]) {
+
+        for memo in memos {
+            if watchMemos.contains(where: {$0.uuid == memo.uuid}) {
+                print("exist: \(memo.title!)")
+            } else {
+                print("not exist: \(memo.title!)")
+                deleteMemo(memo: memo)
+            }
+        }
+
+    }
 }
+
+
 
 struct MessageRow: View {
     let memo: Memo
