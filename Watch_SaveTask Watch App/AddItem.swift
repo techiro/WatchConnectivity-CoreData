@@ -38,8 +38,7 @@ struct AddItem: View {
 
     func addMemo() {
         let memo = memoItem == nil ? Memo(context: context) : memoItem!
-        memo.uuid = UUID().uuidString
-        print(memo.uuid)
+        memo.uuid = memoItem?.uuid ?? UUID().uuidString
         memo.title = memoText
         memo.dateAdded = Date()
         do {

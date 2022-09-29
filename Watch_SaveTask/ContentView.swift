@@ -73,33 +73,39 @@ struct ContentView: View {
             }
         }
         .onReceive(viewModel.$messagesData) { messages in
-            guard let lastDate = getAllMemos().last?.dateAdded else {
+           if getAllMemos().isEmpty {
                 messages.forEach { saveData(message: $0) }
                 memos = getAllMemos()
                 return
             }
-            // modifierされた場合
-            let containsMemo = messages.filter(containsMemo)
-            for memo in containsMemo {
-                guard let watchMemo = messages.first(where: { $0.id == memo.id }) else { return }
-                memo.title = watchMemo.title
-                memo.dateAdded = watchMemo.dateAdded
-                do {
-                    try context.save()
 
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
+//            // modifierされた場合
+//            let containsMemo = messages.filter(containsMemoFilter)
+//
+//            for memo in containsMemo {
+//                guard let watchMemo = messages.first(where: { $0.uuid == memo.uuid }) else { return }
+//
+////                memo.title = watchMemo.title
+////                memo.dateAdded = watchMemo.dateAdded
+//                do {
+//
+//                memo.setValue(watchMemo.title, forKey: "title")
+//                memo.setValue(watchMemo.dateAdded, forKey: "dateAdded")
+//
+//                    try context.save()
+//                    memos = getAllMemos()
+//                } catch {
+//                    print(error.localizedDescription)
+//                }
+//            }
 
             //new memo
-            let notContainsMemo = messages.filter(notContainsMemo)
+            let notContainsMemo = messages.filter(notContainsMemoFilter)
             notContainsMemo.forEach {
                 saveData(message: $0)
             }
             //deleteMemo
-
-            deletedMemo(watchMemos: messages)
+            updateMemos(watchMemos: messages)
 
             memos = getAllMemos()
         }
@@ -139,7 +145,7 @@ struct ContentView: View {
 
     func saveData(message: Memo) {
         let newMemo = Memo(context: self.context)
-
+        newMemo.uuid = message.uuid
         newMemo.title = message.title
         newMemo.dateAdded = message.dateAdded
 
@@ -161,23 +167,46 @@ struct ContentView: View {
             return []
         }
     }
-    func containsMemo(memo: Memo) -> Bool {
-        return memos.contains(memo)
+    func containsMemoFilter(memo: Memo) -> Bool {
+        return memos.contains(where: { $0.uuid == memo.uuid })
     }
-    func notContainsMemo(memo: Memo) -> Bool {
-        return !memos.contains(memo)
+    func notContainsMemoFilter(memo: Memo) -> Bool {
+        return !memos.contains(where: { $0.uuid == memo.uuid })
     }
 
-    func deletedMemo(watchMemos: [Memo]) {
+    func updateMemos(watchMemos: [Memo]) {
+
+        let fetchRequest = Memo.fetchRequest()
+        let fetchData = try! context.fetch(fetchRequest)
 
         for memo in memos {
             if watchMemos.contains(where: {$0.uuid == memo.uuid}) {
-                print("exist: \(memo.title!)")
+
+                let updateMemo = watchMemos.first(where: { $0.uuid == memo.uuid })
+
+                memo.title = updateMemo?.title
+                memo.dateAdded = updateMemo?.dateAdded
+
+                do {
+                    try context.save()
+                } catch {
+                    print("error save updateMemos")
+                }
             } else {
-                print("not exist: \(memo.title!)")
                 deleteMemo(memo: memo)
             }
         }
+
+//        for memo in memos {
+//
+//            if watchMemos.contains(where: {$0.uuid == memo.uuid}) {
+//                print("exist: \(memo.title!)")
+//
+//            } else {
+//                print("not exist: \(memo.title!)")
+//                deleteMemo(memo: memo)
+//            }
+//        }
 
     }
 }
