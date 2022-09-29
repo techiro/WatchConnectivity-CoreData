@@ -22,5 +22,5 @@ extension Memo {
 }
 
 extension Memo : Identifiable {
-
+    @NSManaged public var id: UUID?
 }

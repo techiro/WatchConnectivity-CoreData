@@ -16,30 +16,61 @@ struct ContentView: View {
     @ObservedObject var viewModel = MessageListViewModel()
     @State private var isReachable = "NO"
     @State var memos: [Memo] = []
+    @State var deleteMemoItem: Memo?
+    @State var deleteMemo = false
+
     var body: some View {
-        List(memos) { item in
-            HStack(spacing: 10) {
-                VStack(alignment: .leading, spacing: 3, content: {
-                    Text(item.title ?? "")
-                        .font(.system(size: 12))
+        List {
+            ForEach(memos, id: \.self ) { item in
+                HStack(spacing: 10) {
+                    VStack(alignment: .leading, spacing: 3, content: {
+                        Text(item.title ?? "")
+                            .font(.system(size: 12))
 
-                    HStack {
-                        Text("Last Modified")
-                            .font(.system(size: 8))
-                            .fontWeight(.semibold)
-                            .foregroundColor(.gray)
+                        HStack {
+                            Text("Last Modified")
+                                .font(.system(size: 8))
+                                .fontWeight(.semibold)
+                                .foregroundColor(.gray)
 
-                        Text(item.dateAdded ?? Date(), style: .date)
-                            .font(.system(size: 8))
-                            .fontWeight(.semibold)
-                            .foregroundColor(.gray)
-                    }
-                })
+                            Text(item.dateAdded ?? Date(), style: .date)
+                                .font(.system(size: 8))
+                                .fontWeight(.semibold)
+                                .foregroundColor(.gray)
+                        }
+                    })
 
-                Spacer(minLength: 4)
+                    Spacer(minLength: 4)
 
-
-
+                    Button(action: {
+                        deleteMemoItem = item
+                        deleteMemo = true
+                    }, label: {
+                        Image(systemName: "trash")
+                            .font(.callout)
+                            .foregroundColor(.white)
+                            .padding(8)
+                            .background(Color("red"))
+                            .cornerRadius(8)
+                    })
+                    .buttonStyle(PlainButtonStyle())
+                }
+            }
+           
+        }
+        .alert("次の動作を行いますか？", isPresented: $deleteMemo) {
+            Button {
+                print("Delete")
+                deleteMemo(memo: deleteMemoItem!)
+            } label: {
+                Text("Delete")
+                    .foregroundColor(.red)
+            }
+            Button {
+                print("Cancel")
+                deleteMemo.toggle()
+            } label: {
+                Text("Cancel")
             }
         }
         .onReceive(viewModel.$messagesData) { messages in
@@ -48,13 +79,18 @@ struct ContentView: View {
                 memos = getAllMemos()
                 return
             }
-            let predicate = NSPredicate(format: "dateAdded > %@", lastDate as CVarArg)
-            let fetchRequest = Memo.fetchRequest()
-            fetchRequest.predicate = predicate
-            let newMemos = getAllMemos(request: fetchRequest)
-                newMemos.forEach {
-                    saveData(message: $0)
-                }
+
+//            let overrideDate = Date(timeIntervalSinceNow: lastDate.timeIntervalSinceNow)
+//
+//            let predicate = NSPredicate(format: "dateAdded > %@", overrideDate as CVarArg)
+//            let fetchRequest = Memo.fetchRequest()
+//            fetchRequest.predicate = predicate
+//            let newMemos = getAllMemos(request: fetchRequest)
+
+            let newMemos = messages.filter { $0.dateAdded! > lastDate }
+            newMemos.forEach {
+                saveData(message: $0)
+            }
             memos = getAllMemos()
         }
         .onAppear {
@@ -65,7 +101,21 @@ struct ContentView: View {
         }
     }
 
-    func deleteMemo() {
+    func rowRemove(offsets: IndexSet) {
+        memos.remove(atOffsets: offsets)
+    }
+
+    func deleteMemo(memo: Memo) {
+        context.delete(memo)
+        do {
+            try context.save()
+            memos = getAllMemos()
+        } catch {
+            print("delete memo")
+        }
+    }
+
+    func deleteAllMemo() {
         let fetchRequest = getAllMemos()
 
         for memo in fetchRequest {
@@ -76,7 +126,6 @@ struct ContentView: View {
                 print("error save()")
             }
         }
-
     }
 
     func saveData(message: Memo) {
