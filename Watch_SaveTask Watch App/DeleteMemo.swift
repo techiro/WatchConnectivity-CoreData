@@ -88,5 +88,6 @@ struct DeleteMemo: View {
 struct DeleteMemo_Previews: PreviewProvider {
     static var previews: some View {
         DeleteMemo()
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

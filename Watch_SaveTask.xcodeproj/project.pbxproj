@@ -25,7 +25,6 @@
 		03866B8928E10E5000FAC97B /* SendToPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03866B8828E10E5000FAC97B /* SendToPhone.swift */; };
 		03866B8B28E10EEB00FAC97B /* SendMemoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03866B8A28E10EEB00FAC97B /* SendMemoModel.swift */; };
 		03866B8E28E114B500FAC97B /* AddItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03866B2E28E0296000FAC97B /* AddItem.swift */; };
-		03866B9028E114BA00FAC97B /* DeleteMemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03866B8428E0B82A00FAC97B /* DeleteMemo.swift */; };
 		03866B9328E114E600FAC97B /* NavButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03866B9228E114E600FAC97B /* NavButton.swift */; };
 		03866B9428E1152F00FAC97B /* NavButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03866B9228E114E600FAC97B /* NavButton.swift */; };
 		03E354A428E45FA70064BA1A /* Persistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03866B7428E02F1900FAC97B /* Persistant.swift */; };
@@ -292,7 +291,6 @@
 				03F1934228E2B6D30008F428 /* MessageListViewModel.swift in Sources */,
 				03866B8E28E114B500FAC97B /* AddItem.swift in Sources */,
 				03F1934D28E2CE540008F428 /* Memo+CoreDataClass.swift in Sources */,
-				03866B9028E114BA00FAC97B /* DeleteMemo.swift in Sources */,
 				03E354A428E45FA70064BA1A /* Persistant.swift in Sources */,
 				03866B0B28E024B300FAC97B /* Watch_SaveTaskApp.swift in Sources */,
 				03F1934F28E2CE540008F428 /* Memo+CoreDataProperties.swift in Sources */,

@@ -45,7 +45,6 @@ struct SendToPhone: View {
             return []
         }
     }
-
 }
 
 struct SendToPhone_Previews: PreviewProvider {

@@ -9,8 +9,6 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
-    @FetchRequest(entity: Memo.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Memo.dateAdded, ascending: false)], animation: .easeIn) var results: FetchedResults<Memo>
-
     @Environment(\.managedObjectContext) var context
 
     @ObservedObject var viewModel = MessageListViewModel()
@@ -78,26 +76,6 @@ struct ContentView: View {
                 memos = getAllMemos()
                 return
             }
-
-//            // modifierされた場合
-//            let containsMemo = messages.filter(containsMemoFilter)
-//
-//            for memo in containsMemo {
-//                guard let watchMemo = messages.first(where: { $0.uuid == memo.uuid }) else { return }
-//
-////                memo.title = watchMemo.title
-////                memo.dateAdded = watchMemo.dateAdded
-//                do {
-//
-//                memo.setValue(watchMemo.title, forKey: "title")
-//                memo.setValue(watchMemo.dateAdded, forKey: "dateAdded")
-//
-//                    try context.save()
-//                    memos = getAllMemos()
-//                } catch {
-//                    print(error.localizedDescription)
-//                }
-//            }
 
             //new memo
             let notContainsMemo = messages.filter(notContainsMemoFilter)
